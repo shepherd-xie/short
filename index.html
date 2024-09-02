@@ -207,6 +207,7 @@
     <main x-data="app" x-cloak>
       <p x-show.transition.opacity="alert" :class="alert?.type" x-text="alert?.message"></p>
       <input placeholder="输入要缩短的网址..." x-model="url" x-ref="url" />
+      <input placeholder="token" x-model="token" type="password" required/>
       <details>
         <summary>自定义设置</summary>
         <div>
@@ -224,6 +225,7 @@
       const app = {
         url: '',
         slug: '',
+        token: '',
         alert: null,
         loading: false,
         isValidated () {
@@ -245,6 +247,7 @@
 
           const body = { url: this.url }
           if (this.slug) body.slug = this.slug
+          if (this.token) body.token = this.token
 
           fetch('/create', {
             method: 'post',

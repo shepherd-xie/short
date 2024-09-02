@@ -54,6 +54,11 @@ export async function onRequest(context) {
     };
     if (!url) return Response.json({ message: 'Missing required parameter: url.' });
 
+    const token = request.token;
+    if (env.ACCESS_TOKEN !== token) {
+        return Response.json({ message: 'Wrong token.' });
+    }
+
     // url格式检查
     if (!/^https?:\/\/.{3,}/.test(url)) {
         return Response.json({ message: 'Illegal format: url.' },{
@@ -67,7 +72,7 @@ export async function onRequest(context) {
         return Response.json({ message: 'Illegal length: slug, (>= 2 && <= 10), or not ending with a file extension.' },{
             headers: corsHeaders,
             status: 400
-        
+
         });
     }
 
@@ -92,7 +97,7 @@ export async function onRequest(context) {
             if (existUrl) {
                 return Response.json({ message: 'Slug already exists.' },{
                     headers: corsHeaders,
-                    status: 200  
+                    status: 200
                 })
             }
         }
@@ -105,7 +110,7 @@ export async function onRequest(context) {
             return Response.json({ slug: existSlug.existSlug, link: `${origin}/${existSlug.existSlug}` },{
                 headers: corsHeaders,
                 status: 200
-            
+
             })
         }
         const bodyUrl = new URL(url);
