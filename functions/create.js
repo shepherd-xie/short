@@ -46,7 +46,7 @@ export async function onRequest(context) {
     };
     const timedata = new Date();
     const formattedDate = new Intl.DateTimeFormat('zh-CN', options).format(timedata);
-    const { url, slug } = await request.json();
+    const { url, slug, token } = await request.json();
     const corsHeaders = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
@@ -54,7 +54,6 @@ export async function onRequest(context) {
     };
     if (!url) return Response.json({ message: 'Missing required parameter: url.' });
 
-    const token = request.token;
     if (env.ACCESS_TOKEN !== token) {
         return Response.json({ message: 'Wrong token.' });
     }
