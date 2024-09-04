@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="asset/img/favicon.png"  >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>short</title>
+    <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+<header><h1>short</h1></header>
+<main x-data="app" x-cloak>
+    <p x-show.transition.opacity="alert" :class="alert?.type" x-text="alert?.message"></p>
+    <input placeholder="token" x-model="token" type="password" required/>
+    <button :class="{ loading }" @click="submit($refs, $nextTick)">Auth</button>
+</main>
+<footer>
+    service
+</footer>
+<script src="asset/js/alpine.js"></script>
+<script>
+    const app = {
+        token: '',
+        alert: null,
+        loading: false,
+        submit ($refs, $nextTick) {
+            if (!this.token) {
+                this.alert = { type: 'error', message: 'Token is required。' }
+                return
+            }
+
+            this.alert = null
+            this.loading = true
+
+            const body = { token: this.token }
+
+            fetch('/manage/auth', {
+                method: 'post',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+            .then(res => {
+                this.loading = false
+                if (res.status === 200) {
+                    window.location.href='/'
+                } else {
+                    this.alert = { type: 'error', message: res.message }
+                }
+            })
+            .catch(e => {
+                this.alert = { type: 'error', message: e.message }
+                this.loading = false
+            })
+        }
+    }
+</script>
+</body>
+</html>
