@@ -12,7 +12,7 @@ function authentication(context) {
     const originUrl = new URL(request.url);
     const token = request.headers.get("X-Token");
 
-    if ('manage/auth' in originUrl.pathname) {
+    if (originUrl.pathname.includes('manage/auth')) {
         context.next();
     }
 
